@@ -43,7 +43,8 @@ var settings = {
   restMin: 5,
   volume: 70,
   muted: false,
-  softMode: false
+  softMode: false,
+  showTips: true
 };
 
 var stats = { date: '', done: 0, skipped: 0, streak: 0, lastDoneDate: '' };
@@ -61,7 +62,7 @@ var el = {
   workMinus: $('workMinus'), workPlus: $('workPlus'),
   restMinus: $('restMinus'), restPlus: $('restPlus'),
   volRange: $('volRange'), muteBtn: $('muteBtn'), volIcon: $('volIcon'),
-  softMode: $('softMode'),
+  softMode: $('softMode'), tipsMode: $('tipsMode'),
   startBtn: $('startBtn'), skipBtn: $('skipBtn'),
   statToday: $('statToday'), statStreak: $('statStreak'),
   hint: $('hint'),
@@ -70,18 +71,18 @@ var el = {
   overlay: $('overlay'), overlayTime: $('overlayTime'),
   overlayBreath: $('overlayBreath'),
   exerciseZone: $('exerciseZone'), exerciseName: $('exerciseName'),
-  exerciseDetail: $('exerciseDetail'),
+  exerciseDetail: $('exerciseDetail'), exerciseTip: $('exerciseTip'),
   doneBtn: $('doneBtn'), otherBtn: $('otherBtn')
 };
 
 var CIRC = 2 * Math.PI * 100;
 
 var ZONE_NAMES = {
-  eyes:'Глаза', neck:'Шея', shoulders:'Плечи', wrists:'Запястья',
-  legs:'Ноги', back:'Спина', breath:'Дыхание', walk:'Движение',
-  glutes:'Ягодичные', hips:'Тазобедренные', chest:'Грудной отдел',
-  arms:'Руки', core:'Корпус', cardio:'Кардио',
-  circuit:'Круговая', mobility:'Мобильность'
+  legs:'Ноги', arms:'Руки', core:'Корпус', glutes:'Ягодичные',
+  cardio:'Кардио', back:'Спина', shoulders:'Плечи', wrists:'Запястья',
+  hips:'Тазобедренные', chest:'Грудь', fullbody:'Всё тело',
+  circuit:'Круговая', strength:'Силовая', mobility:'Мобильность',
+  walk:'Прогулка'
 };
 
 /* ================= хранилище ================= */
@@ -95,6 +96,7 @@ function loadSettings(){
       if(typeof p.volume === 'number')  settings.volume  = clamp(p.volume, 0, 100);
       if(typeof p.muted === 'boolean')  settings.muted   = p.muted;
       if(typeof p.softMode === 'boolean') settings.softMode = p.softMode;
+      if(typeof p.showTips === 'boolean') settings.showTips = p.showTips;
     }
   }catch(e){ console.warn('settings load failed', e); }
 }
@@ -229,6 +231,7 @@ function renderSettings(){
   el.muteBtn.setAttribute('aria-label', settings.muted ? 'Включить звук' : 'Выключить звук');
   el.volIcon.style.opacity = settings.muted ? 0.4 : 1;
   el.softMode.setAttribute('aria-checked', String(settings.softMode));
+  el.tipsMode.setAttribute('aria-checked', String(settings.showTips));
 
   el.presets.forEach(function(b){
     b.classList.toggle('active',
@@ -318,6 +321,13 @@ function showExercise(){
   el.exerciseZone.textContent = ZONE_NAMES[S.exercise.zone] || S.exercise.zone;
   el.exerciseName.textContent = S.exercise.name;
   el.exerciseDetail.textContent = S.exercise.detail;
+
+  if(settings.showTips && S.exercise.tip){
+    el.exerciseTip.textContent = S.exercise.tip;
+    el.exerciseTip.hidden = false;
+  } else {
+    el.exerciseTip.hidden = true;
+  }
 }
 function openOverlay(){
   showExercise();
@@ -510,6 +520,11 @@ el.muteBtn.onclick = function(){
 el.softMode.onclick = function(){
   settings.softMode = !settings.softMode;
   saveSettings(); renderSettings();
+};
+el.tipsMode.onclick = function(){
+  settings.showTips = !settings.showTips;
+  saveSettings(); renderSettings();
+  if(el.overlay.classList.contains('show')) showExercise();
 };
 
 el.startBtn.onclick = function(){ S.running ? stop() : start(); };
