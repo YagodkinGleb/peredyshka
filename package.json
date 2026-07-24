@@ -1,0 +1,16 @@
+{
+  "name": "peredyshka",
+  "version": "1.0.0",
+  "description": "Таймер перерывов с упражнениями",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "test": "node test/run.js"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0",
+    "jsdom": "^29.1.1"
+  }
+}

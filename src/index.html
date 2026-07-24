@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Передышка</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<main class="app" id="mainScreen">
+
+  <div class="ring-wrap" id="ringWrap">
+    <svg viewBox="0 0 236 236" aria-hidden="true">
+      <circle class="face" cx="118" cy="118" r="116"></circle>
+      <g id="ticks"></g>
+      <circle class="track" cx="118" cy="118" r="100"></circle>
+      <circle class="progress" id="progressCircle" cx="118" cy="118" r="100"
+              stroke-dasharray="628.3" stroke-dashoffset="0"></circle>
+    </svg>
+    <div class="ring-center">
+      <div class="time" id="timeDisplay" role="timer" aria-live="off">25:00</div>
+      <div class="phase-label" id="phaseLabel">Готов к работе</div>
+    </div>
+  </div>
+
+  <div class="presets" id="presets">
+    <button class="preset" data-work="25" data-rest="5">25 / 5</button>
+    <button class="preset" data-work="50" data-rest="10">50 / 10</button>
+    <button class="preset" data-work="90" data-rest="15">90 / 15</button>
+  </div>
+
+  <div class="controls">
+    <div class="row">
+      <label id="workLabel">Работа, мин</label>
+      <div class="stepper">
+        <button id="workMinus" aria-label="Уменьшить время работы">−</button>
+        <div class="val" id="workVal" aria-labelledby="workLabel">25</div>
+        <button id="workPlus" aria-label="Увеличить время работы">+</button>
+      </div>
+    </div>
+    <div class="row">
+      <label id="restLabel">Отдых, мин</label>
+      <div class="stepper">
+        <button id="restMinus" aria-label="Уменьшить время отдыха">−</button>
+        <div class="val" id="restVal" aria-labelledby="restLabel">5</div>
+        <button id="restPlus" aria-label="Увеличить время отдыха">+</button>
+      </div>
+    </div>
+
+    <div class="vol-row">
+      <button class="icon-btn on" id="muteBtn" aria-label="Выключить звук" aria-pressed="false">
+        <svg id="volIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+          <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+        </svg>
+      </button>
+      <label for="volRange">Громкость</label>
+      <input type="range" id="volRange" min="0" max="100" value="70"
+             aria-label="Громкость сигнала">
+    </div>
+
+    <div class="toggle-row">
+      <div class="lbl">
+        Мягкий режим
+        <small>только уведомление, без захвата экрана</small>
+      </div>
+      <button class="switch" id="softMode" role="switch" aria-checked="false"
+              aria-label="Мягкий режим"></button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="startBtn">Начать</button>
+    <button class="btn" id="skipBtn" hidden>Отдохнуть сейчас</button>
+  </div>
+
+  <div class="stats">
+    <span><b id="statToday">0</b>перерывов сегодня</span>
+    <span><b id="statStreak">0</b>дней подряд</span>
+  </div>
+
+  <p class="hint" id="hint">Окно можно закрыть — программа останется в трее</p>
+
+</main>
+
+<!-- Предупреждение за 30 секунд до перерыва -->
+<aside class="warning" id="warning" role="alert" aria-live="assertive">
+  <div class="warning-text">
+    Перерыв через <b id="warningCountdown">30</b> секунд. Заканчивай мысль.
+  </div>
+  <div class="warning-actions">
+    <button class="btn" id="snoozeBtn">Отложить на 5 мин</button>
+    <button class="btn primary" id="warnNowBtn">Готов, начать</button>
+  </div>
+</aside>
+
+<!-- Полноэкранный экран отдыха -->
+<section class="overlay" id="overlay" role="dialog" aria-modal="true"
+         aria-labelledby="exerciseName" tabindex="-1">
+  <div class="overlay-inner">
+    <div class="overlay-eyebrow">Перерыв</div>
+    <div class="overlay-time" id="overlayTime">05:00</div>
+
+    <div class="exercise-card">
+      <div class="exercise-zone" id="exerciseZone">Ноги</div>
+      <h1 class="exercise-name" id="exerciseName">20 приседаний</h1>
+      <p class="exercise-detail" id="exerciseDetail"></p>
+    </div>
+
+    <div class="overlay-breath" id="overlayBreath"></div>
+
+    <div class="overlay-actions">
+      <button class="overlay-btn done" id="doneBtn">Сделал, вернуться к работе</button>
+      <button class="overlay-btn" id="otherBtn">Другое упражнение</button>
+    </div>
+    <div class="overlay-esc">Esc — пропустить перерыв</div>
+  </div>
+</section>
+
+<script src="exercises.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
