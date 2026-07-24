@@ -269,3 +269,14 @@ body.rest-mode .btn.primary{ background:var(--rest); border-color:var(--rest); c
 @media (prefers-reduced-motion: reduce){
   *{ animation:none !important; transition:none !important; }
 }
+
+/* Подсказка про глаза и дыхание — заметно мельче основного упражнения,
+   чтобы её нельзя было спутать с самим упражнением */
+.exercise-tip{
+  margin:2px 0 0;
+  padding-top:12px;
+  border-top:1px solid rgba(143,184,154,.18);
+  font-size:12.5px;
+  line-height:1.5;
+  color:var(--text-muted);
+}
