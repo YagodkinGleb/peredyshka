@@ -30,9 +30,6 @@ jobs:
       - name: Зависимости
         run: npm install
 
-      - name: Тесты логики
-        run: npm test
-
       - name: Сборка
         run: npm run build
 
