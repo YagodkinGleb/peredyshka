@@ -17,6 +17,8 @@
     <span class="sys-state" id="phaseLabel">ОЖИДАНИЕ</span>
   </div>
 
+  <nav class="app-tabs" aria-label="Разделы"><button id="timerTab" aria-pressed="true" aria-controls="timerPanel">Таймер</button><button id="settingsTab" aria-pressed="false" aria-controls="settingsPanel">Настройки</button></nav>
+  <section id="timerPanel" class="app-panel">
   <section class="readout" id="ringWrap">
     <div class="time" id="timeDisplay" role="timer" aria-live="off">25:00</div>
     <!-- Сегментная шкала: заполняется блоками, а не плавной линией -->
@@ -56,6 +58,39 @@
       </div>
     </div>
 
+
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="startBtn">Запустить</button>
+    <button class="btn" id="skipBtn" hidden>Перерыв</button>
+  </div>
+  <button class="link-btn" id="resetBtn" hidden>[ СБРОС ]</button>
+
+  <div class="stats">
+    <span><i>СДЕЛАНО</i><b id="statToday">00</b></span>
+    <span><i>ПРОПУЩ</i><b id="statSkipped">00</b></span>
+    <span><i>СЕРИЯ</i><b id="statStreak">00</b></span>
+  </div>
+
+  <!-- Показывается один раз, после первого выполненного перерыва -->
+  <aside class="offer" id="autoOffer" hidden>
+    <p class="offer-text">
+      Перерыв засчитан. Чтобы не запускать программу вручную каждое утро —
+      включить автозапуск вместе с Windows?
+    </p>
+    <div class="offer-actions">
+      <button class="btn" id="offerNo">Не нужно</button>
+      <button class="btn primary" id="offerYes">Включить</button>
+    </div>
+  </aside>
+
+  <p class="hint" id="hint">Крестик прячет окно в трей, программа продолжит работать</p>
+  </section>
+  <section id="settingsPanel" class="app-panel" hidden aria-label="Настройки">
+    <div id="trainingSettings" class="training-settings"></div>
+    <h2 class="settings-heading">Приложение</h2>
+    <div class="controls">
     <div class="row">
       <label for="volRange">Сигнал</label>
       <div class="vol-group">
@@ -89,37 +124,12 @@
       <button class="switch" id="tipsMode" role="switch" aria-checked="true"
               aria-label="Дополнительные подсказки"><span>ВКЛ</span></button>
     </div>
-  </div>
-
-  <div class="actions">
-    <button class="btn primary" id="startBtn">Запустить</button>
-    <button class="btn" id="skipBtn" hidden>Перерыв</button>
-  </div>
-  <button class="link-btn" id="resetBtn" hidden>[ СБРОС ]</button>
-
-  <div class="stats">
-    <span><i>СДЕЛАНО</i><b id="statToday">00</b></span>
-    <span><i>ПРОПУЩ</i><b id="statSkipped">00</b></span>
-    <span><i>СЕРИЯ</i><b id="statStreak">00</b></span>
-  </div>
-
-  <!-- Показывается один раз, после первого выполненного перерыва -->
-  <aside class="offer" id="autoOffer" hidden>
-    <p class="offer-text">
-      Перерыв засчитан. Чтобы не запускать программу вручную каждое утро —
-      включить автозапуск вместе с Windows?
-    </p>
-    <div class="offer-actions">
-      <button class="btn" id="offerNo">Не нужно</button>
-      <button class="btn primary" id="offerYes">Включить</button>
     </div>
-  </aside>
-
-  <p class="hint" id="hint">Крестик прячет окно в трей, программа продолжит работать</p>
   <footer class="credits">
     <span><small>Разработчик</small>Глеб Ягодкин</span>
     <a id="supportLink" href="https://boosty.to/yagojeez/donate" target="_blank" rel="noopener noreferrer" aria-label="Поддержать Глеба Ягодкина на Boosty">Поддержать <span aria-hidden="true">↗</span></a>
   </footer>
+  </section>
   <p id="appStatus" class="app-status" role="status" hidden></p>
 </main>
 
@@ -146,9 +156,11 @@
     <div class="ov-main">
       <div class="ov-readout">
         <span class="exercise-zone" id="stepLabel">ПРИГОТОВЬСЯ</span>
-        <div class="count" id="exerciseCount" aria-hidden="true"></div>
+        <div class="count" id="exerciseCount"></div>
         <p id="stepStatus" role="status" aria-live="polite"></p>
+        <p id="stageClock" class="stage-clock" role="timer" aria-live="off"></p>
       </div>
+      <div id="exerciseFigure" class="exercise-figure"></div>
       <div class="ov-body">
         <span class="exercise-zone" id="exerciseZone">НОГИ</span>
         <h2 class="exercise-name" id="exerciseName">Короткая разминка</h2>
@@ -160,21 +172,23 @@
     </div>
 
     <footer class="ov-foot">
+      <div id="exerciseQueue" class="exercise-queue" aria-label="План перерыва"></div>
       <div class="ov-meta">
         <span class="exercise-time" id="exerciseTime"></span>
         <span class="overlay-breath" id="overlayBreath"></span>
       </div>
       <div class="overlay-actions">
-        <button class="overlay-btn done" id="doneBtn">Выполнено</button>
-        <button class="overlay-btn" id="otherBtn">Заменить</button>
-        <button class="overlay-btn quiet" id="dismissBreakBtn">Пропустить</button>
+        <button class="overlay-btn done" id="doneBtn">Подход выполнен</button>
+        <button class="overlay-btn quiet" id="dismissBreakBtn">Завершить перерыв</button>
       </div>
-      <div class="overlay-esc">ESC — ПРОПУСТИТЬ · МОЖНО ЗАКОНЧИТЬ РАНЬШЕ, ЕСЛИ УЖЕ РАЗМЯЛСЯ</div>
+      <div class="overlay-esc">ПЕРЕХОДЫ АВТОМАТИЧЕСКИЕ · ESC — ЗАВЕРШИТЬ ПЕРЕРЫВ</div>
     </footer>
   </div>
 </section>
 
 <script src="exercises.js"></script>
+<script src="illustrations.js"></script>
+<script src="training-settings.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
